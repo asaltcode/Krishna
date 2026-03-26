@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QA Automation - Real-Time Validation</title>
+    <title>QA Automation - Persistent Portal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -14,7 +14,7 @@
         }
 
         body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); padding: 20px; }
-        .container { max-width: 650px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .container { max-width: 750px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
         
         h2 { color: var(--primary); border-bottom: 3px solid var(--success); padding-bottom: 10px; margin-bottom: 25px; }
 
@@ -26,7 +26,6 @@
             border: 1px solid #ddd;
             border-radius: 6px;
             font-size: 1rem;
-            transition: border-color 0.3s;
         }
 
         .error-msg {
@@ -41,31 +40,33 @@
 
         .option-group { display: flex; gap: 20px; align-items: center; padding: 5px 0; }
         
+        .btn-group { display: flex; gap: 15px; margin-top: 10px; }
         button { 
             padding: 15px; 
             border: none; 
             border-radius: 6px; 
             font-weight: bold; 
             font-size: 1rem;
-            background: var(--success);
-            color: white;
             cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
+            transition: opacity 0.3s;
         }
 
+        #submitBtn { background: var(--success); color: white; flex: 2; }
+        #clearAllBtn { background: #95a5a6; color: white; flex: 1; }
         button:hover { opacity: 0.9; }
 
         .table-section { margin-top: 40px; border-top: 2px solid #eee; padding-top: 20px; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
         th { background: #f8f9fa; color: #666; font-size: 0.75rem; text-transform: uppercase; }
+        
+        .delete-btn { color: var(--danger); background: none; border: none; cursor: pointer; font-size: 1.1rem; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2></i>Registration Form</h2>
+    <h2>Registration Form</h2>
 
     <form id="qaForm" novalidate>
         <div class="form-group">
@@ -96,28 +97,59 @@
 
         <div class="form-group" style="min-height: 60px;">
             <div class="option-group">
-                <label><input type="checkbox" id="termsCheckbox"> I agree to terms and conditions</label>
+                <label><input type="checkbox" id="termsCheckbox"> I agree to the terms</label>
             </div>
-            <span class="error-msg" id="termsError">Checkbox agreement is required</span>
+            <span class="error-msg" id="termsError">I agree to terms is required</span>
         </div>
 
-        <button type="submit" id="submitBtn">Submit Record</button>
+        <div class="btn-group">
+            <button type="submit" id="submitBtn">Submit Record</button>
+            <button type="button" id="clearAllBtn">Clear All</button>
+        </div>
     </form>
 
     <div class="table-section">
         <table id="resultsTable">
-            <thead><tr><th>Name</th><th>Exp</th><th>Work</th><th>Status</th></tr></thead>
-            <tbody><tr><td colspan="4" style="text-align:center; color:#999;">No records found.</td></tr></tbody>
+            <thead>
+                <tr><th>Name</th><th>Exp</th><th>Work</th><th>Action</th></tr>
+            </thead>
+            <tbody></tbody>
         </table>
     </div>
 </div>
 
 <script>
     const form = document.getElementById("qaForm");
-    
-    // --- Real-Time Listeners ---
+    const tableBody = document.querySelector("#resultsTable tbody");
 
-    // 1. Textbox: Remove error on input
+    // --- Data Persistence Logic ---
+    const loadData = () => {
+        const data = JSON.parse(localStorage.getItem("automation_records") || "[]");
+        tableBody.innerHTML = data.length ? data.map(item => `
+            <tr>
+                <td>${item.name}</td>
+                <td>${item.exp}</td>
+                <td>${item.type}</td>
+                <td><button class="delete-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash-alt"></i></button></td>
+            </tr>
+        `).join('') : '<tr><td colspan="4" style="text-align:center; color:#999;">No records found.</td></tr>';
+    };
+
+    window.deleteItem = (id) => {
+        let data = JSON.parse(localStorage.getItem("automation_records") || "[]");
+        data = data.filter(item => item.id !== id);
+        localStorage.setItem("automation_records", JSON.stringify(data));
+        loadData();
+    };
+
+    document.getElementById("clearAllBtn").addEventListener("click", () => {
+        if (confirm("Permanently clear all local storage data?")) {
+            localStorage.removeItem("automation_records");
+            loadData();
+        }
+    });
+
+    // --- Real-Time Validation Listeners ---
     document.getElementById("fullName").addEventListener("input", function() {
         if (this.value.trim() !== "") {
             document.getElementById("nameError").style.display = "none";
@@ -125,7 +157,6 @@
         }
     });
 
-    // 2. Dropdown: Remove error on change
     document.getElementById("experience").addEventListener("change", function() {
         if (this.value !== "") {
             document.getElementById("expError").style.display = "none";
@@ -133,61 +164,53 @@
         }
     });
 
-    // 3. Radio Buttons: Remove error on click
-    document.querySelectorAll('input[name="workType"]').forEach(radio => {
-        radio.addEventListener("change", function() {
-            document.getElementById("workError").style.display = "none";
-        });
+    document.querySelectorAll('input[name="workType"]').forEach(r => {
+        r.addEventListener("change", () => document.getElementById("workError").style.display = "none");
     });
 
-    // 4. Checkbox: Remove error on check
     document.getElementById("termsCheckbox").addEventListener("change", function() {
-        if (this.checked) {
-            document.getElementById("termsError").style.display = "none";
-        }
+        if (this.checked) document.getElementById("termsError").style.display = "none";
     });
 
-    // --- Submit Logic ---
+    // --- Form Submission ---
     form.addEventListener("submit", function(e) {
         e.preventDefault();
         let isValid = true;
 
-        const fullName = document.getElementById("fullName");
-        const experience = document.getElementById("experience");
-        const workSelected = document.querySelector('input[name="workType"]:checked');
+        const name = document.getElementById("fullName");
+        const exp = document.getElementById("experience");
+        const work = document.querySelector('input[name="workType"]:checked');
         const terms = document.getElementById("termsCheckbox");
 
-        if (!fullName.value.trim()) {
+        if (!name.value.trim()) {
             document.getElementById("nameError").style.display = "block";
-            fullName.classList.add("invalid");
+            name.classList.add("invalid");
             isValid = false;
         }
-
-        if (experience.value === "") {
+        if (exp.value === "") {
             document.getElementById("expError").style.display = "block";
-            experience.classList.add("invalid");
+            exp.classList.add("invalid");
             isValid = false;
         }
-
-        if (!workSelected) {
+        if (!work) {
             document.getElementById("workError").style.display = "block";
             isValid = false;
         }
-
         if (!terms.checked) {
             document.getElementById("termsError").style.display = "block";
             isValid = false;
         }
 
         if (isValid) {
-            const tableBody = document.querySelector("#resultsTable tbody");
-            const newRow = `<tr><td>${fullName.value}</td><td>${experience.value}</td><td>${workSelected.value}</td><td style="color:green; font-weight:bold;">Success</td></tr>`;
-            if(tableBody.innerText.includes("No records")) tableBody.innerHTML = "";
-            tableBody.innerHTML += newRow;
+            const data = JSON.parse(localStorage.getItem("automation_records") || "[]");
+            data.push({ id: Date.now(), name: name.value, exp: exp.value, type: work.value });
+            localStorage.setItem("automation_records", JSON.stringify(data));
             form.reset();
-            //alert("Record successfully added!");
+            loadData();
         }
     });
+
+    document.addEventListener("DOMContentLoaded", loadData);
 </script>
 </body>
 </html>
