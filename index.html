@@ -2,330 +2,123 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Data Management System</title>
+    <title>QA Automation - Persistent Form</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #28a745;
-            --primary-hover: #218838;
-            --danger-color: #dc3545;
-            --secondary-color: #6c757d;
-            --bg-color: #f4f7f6;
-            --card-bg: #ffffff;
-            --text-main: #333;
-            --border-color: #dee2e6;
-        }
-
-        body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background-color: var(--bg-color); 
-            color: var(--text-main); 
-            line-height: 1.6;
-            margin: 0;
-            padding: 40px 20px;
-        }
-
-        .container { 
-            max-width: 1000px; 
-            margin: auto; 
-            background: var(--card-bg); 
-            padding: 30px; 
-            border-radius: 12px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
-        }
-
-        h2 { 
-            font-weight: 600; 
-            margin-top: 0; 
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #2c3e50;
-        }
-
-        /* Professional Form Layout using Grid */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .form-group { 
-            display: flex; 
-            flex-direction: column; 
-        }
-
-        .full-width { 
-            grid-column: span 2; 
-        }
-
-        label { 
-            font-size: 0.85rem;
-            font-weight: 700; 
-            margin-bottom: 8px; 
-            text-transform: uppercase;
-            color: #555;
-        }
-
-        input, select { 
-            padding: 12px; 
-            border: 1px solid var(--border-color); 
-            border-radius: 6px; 
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        input:focus, select:focus { 
-            border-color: var(--primary-color); 
-            outline: none; 
-            box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
-        }
-
-        .btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: background 0.3s;
-        }
-
-        .btn-submit { 
-            background: var(--primary-color); 
-            color: white; 
-            width: 100%;
-            font-size: 1rem;
-        }
-
-        .btn-submit:hover { background: var(--primary-hover); }
-
-        .btn-clear {
-            background: var(--secondary-color);
-            color: white;
-            font-size: 0.8rem;
-        }
-
-        .btn-clear:hover { background: #5a6268; }
-
-        /* Table Styling */
-        .table-header-flex {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 40px;
-            margin-bottom: 15px;
-            border-top: 1px solid var(--border-color);
-            padding-top: 30px;
-        }
-
-        .table-container { 
-            overflow-x: auto; 
-        }
-
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            background: white;
-        }
-
-        th { 
-            background: #f8f9fa;
-            color: #666;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.5px;
-            padding: 15px;
-            border-bottom: 2px solid var(--border-color);
-            text-align: left;
-        }
-
-        td { 
-            padding: 15px; 
-            border-bottom: 1px solid #f1f1f1; 
-            font-size: 0.95rem;
-        }
-
-        tr:hover { background-color: #fafafa; }
-
-        .delete-btn { 
-            color: var(--danger-color); 
-            background: none; 
-            border: none; 
-            cursor: pointer; 
-            font-size: 1rem;
-            padding: 5px;
-            transition: transform 0.2s;
-        }
-
-        .delete-btn:hover { transform: scale(1.2); }
-
-        /* Responsive Adjustment */
-        @media (max-width: 768px) {
-            .form-grid { grid-template-columns: 1fr; }
-            .full-width { grid-column: span 1; }
-        }
+        :root { --primary: #2c3e50; --success: #27ae60; --danger: #e74c3c; }
+        body { font-family: 'Segoe UI', sans-serif; background: #ecf0f1; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
+        .row { display: flex; gap: 20px; }
+        .row > div { flex: 1; }
+        label { font-weight: bold; margin-bottom: 5px; font-size: 0.85rem; }
+        input, select, textarea { padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+        button { cursor: pointer; border-radius: 4px; font-weight: bold; border: none; padding: 12px; }
+        #submitBtn { background: var(--success); color: white; flex: 2; }
+        #clearAllBtn { background: #95a5a6; color: white; flex: 1; }
+        table { width: 100%; border-collapse: collapse; margin-top: 25px; }
+        th, td { border-bottom: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #f8f9fa; font-size: 0.8rem; text-transform: uppercase; }
+        .delete-btn { color: var(--danger); background: none; cursor: pointer; font-size: 1rem; }
     </style>
 </head>
-
 <body>
-
 <div class="container">
-    <h2><i class="fas fa-clipboard-list" style="color: var(--primary-color);"></i> User Registration</h2>
-
-    <form id="userForm">
-        <div class="form-grid">
+    <h2><i class="fas fa-database"></i> Candidate Data Portal</h2>
+    <form id="testForm">
+        <div class="row">
             <div class="form-group">
-                <label>First Name</label>
-                <input type="text" id="firstName" required placeholder="Enter first name">
+                <label>Full Name</label>
+                <input type="text" id="fullName" required>
             </div>
-
             <div class="form-group">
-                <label>Last Name</label>
-                <input type="text" id="lastName" placeholder="Enter last name">
-            </div>
-
-            <div class="form-group">
-                <label>Email Address</label>
-                <input type="email" id="email" required placeholder="name@company.com">
-            </div>
-
-            <div class="form-group">
-                <label>Phone Number</label>
-                <input type="tel" id="phone" placeholder="(555) 000-0000">
-            </div>
-
-            <div class="form-group">
-                <label>City</label>
-                <input type="text" id="city" placeholder="e.g. New York">
-            </div>
-
-            <div class="form-group">
-                <label>Gender</label>
-                <select id="gender">
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
+                <label>Experience</label>
+                <select id="experience">
+                    <option value="Junior">Junior (0-2 yrs)</option>
+                    <option value="Mid">Mid (3-5 yrs)</option>
+                    <option value="Senior">Senior (5+ yrs)</option>
                 </select>
             </div>
+        </div>
 
-            <div class="form-group full-width">
-                <button type="submit" class="btn btn-submit">
-                    <i class="fas fa-save"></i> Submit Record
-                </button>
+        <div class="form-group">
+            <label>Remote Preference</label>
+            <div style="display:flex; gap: 20px; padding: 5px 0;">
+                <label><input type="radio" name="work" value="Remote" id="radioRemote"> Remote</label>
+                <label><input type="radio" name="work" value="Onsite" id="radioOnsite"> Onsite</label>
             </div>
+        </div>
+
+        <div class="form-group">
+            <label><input type="checkbox" id="terms"> I agree to the terms and conditions</label>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" id="submitBtn">Submit Record</button>
+            <button type="button" id="clearAllBtn">Clear All Records</button>
         </div>
     </form>
 
-    <div class="table-header-flex">
-        <h2 style="margin: 0;"><i class="fas fa-database" style="color: #3498db;"></i> Stored Data</h2>
-        <button id="clearAllBtn" class="btn btn-clear">
-            <i class="fas fa-trash-sweep"></i> Clear All
-        </button>
-    </div>
-
-    <div class="table-container">
-        <table id="dataTable">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>City</th>
-                    <th>Gender</th>
-                    <th style="text-align: center;">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                </tbody>
-        </table>
-    </div>
+    <table id="resultTable">
+        <thead>
+            <tr><th>Name</th><th>Exp</th><th>Type</th><th>Actions</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 </div>
 
 <script>
-    const userForm = document.getElementById("userForm");
-    const tableBody = document.querySelector("#dataTable tbody");
-    const clearAllBtn = document.getElementById("clearAllBtn");
+    const form = document.getElementById("testForm");
+    const tableBody = document.querySelector("#resultTable tbody");
 
-    // Initialization
-    document.addEventListener("DOMContentLoaded", displayUsers);
+    // Load Data from Local Storage
+    document.addEventListener("DOMContentLoaded", loadData);
 
-    // Form Submission
-    userForm.addEventListener("submit", function(e) {
+    form.addEventListener("submit", function(e) {
         e.preventDefault();
-
-        const newUser = {
+        const entry = {
             id: Date.now(),
-            firstName: document.getElementById("firstName").value,
-            lastName: document.getElementById("lastName").value,
-            email: document.getElementById("email").value,
-            phone: document.getElementById("phone").value,
-            city: document.getElementById("city").value,
-            gender: document.getElementById("gender").value
+            name: document.getElementById("fullName").value,
+            exp: document.getElementById("experience").value,
+            type: document.querySelector('input[name="work"]:checked')?.value || "N/A"
         };
-
-        const users = getLocalStorage();
-        users.push(newUser);
-        localStorage.setItem("users", JSON.stringify(users));
-
-        displayUsers();
-        userForm.reset();
+        saveData(entry);
+        form.reset();
+        loadData();
     });
 
-    // Helper: Get data
-    function getLocalStorage() {
-        return localStorage.getItem("users") ? JSON.parse(localStorage.getItem("users")) : [];
+    function saveData(entry) {
+        const data = JSON.parse(localStorage.getItem("automation_data") || "[]");
+        data.push(entry);
+        localStorage.setItem("automation_data", JSON.stringify(data));
     }
 
-    // Display Logic
-    function displayUsers() {
-        const users = getLocalStorage();
-        tableBody.innerHTML = "";
-
-        if (users.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: #999; padding: 40px;">No records available.</td></tr>`;
-            return;
-        }
-
-        users.forEach(user => {
-            let row = tableBody.insertRow();
-            row.innerHTML = `
-                <td><strong>${user.firstName}</strong> ${user.lastName}</td>
-                <td>${user.email}</td>
-                <td>${user.phone || 'N/A'}</td>
-                <td>${user.city || 'N/A'}</td>
-                <td><span style="font-size: 0.85rem; background: #eee; padding: 2px 8px; border-radius: 10px;">${user.gender}</span></td>
-                <td style="text-align: center;">
-                    <button class="delete-btn" onclick="deleteUser(${user.id})">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </td>
-            `;
-        });
+    function loadData() {
+        const data = JSON.parse(localStorage.getItem("automation_data") || "[]");
+        tableBody.innerHTML = data.map(item => `
+            <tr>
+                <td>${item.name}</td>
+                <td>${item.exp}</td>
+                <td>${item.type}</td>
+                <td><button class="delete-btn" onclick="deleteItem(${item.id})"><i class="fas fa-trash"></i></button></td>
+            </tr>
+        `).join('') || '<tr><td colspan="4" style="text-align:center">No data found</td></tr>';
     }
 
-    // Delete Individual
-    window.deleteUser = function(id) {
-        let users = getLocalStorage();
-        users = users.filter(user => user.id !== id);
-        localStorage.setItem("users", JSON.stringify(users));
-        displayUsers();
+    window.deleteItem = function(id) {
+        let data = JSON.parse(localStorage.getItem("automation_data") || "[]");
+        data = data.filter(item => item.id !== id);
+        localStorage.setItem("automation_data", JSON.stringify(data));
+        loadData();
     };
 
-    // Clear All
-    clearAllBtn.addEventListener("click", function() {
-        if (confirm("Are you sure you want to permanently delete all records?")) {
-            localStorage.removeItem("users");
-            displayUsers();
+    document.getElementById("clearAllBtn").addEventListener("click", () => {
+        if(confirm("Delete all records from local storage?")) {
+            localStorage.removeItem("automation_data");
+            loadData();
         }
     });
 </script>
-
 </body>
 </html>
